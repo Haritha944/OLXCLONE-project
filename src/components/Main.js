@@ -3,6 +3,7 @@ import Home from './Home';
 import Navbar from './Navbar';
 import Menubar from './Menubar';
 import Footer from './Footer';
+import Posts from './Posts';
 
 const Main = () => {
 
@@ -22,6 +23,7 @@ const Main = () => {
     <div>
         <Navbar setSearch={setSearch}/>
         <Menubar setMenu={setMenu}/>
+        <Posts />
         <Home products={prod} search={search} menu={menu} />
         <Footer />
     </div>

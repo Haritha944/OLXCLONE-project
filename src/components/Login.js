@@ -6,15 +6,17 @@ import phone from "../assests/phone.png";
 import { signInWithPopup } from 'firebase/auth';
 import { auth,googleProvider } from '../firebase/setup';
 import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom'; 
 
 
 
 const Login = ({ setLoginPop }) => {
-    const history = useNavigate();
+    const navigate = useNavigate();
     const googleSignin = async()=>{
 
         try {
             await signInWithPopup(auth,googleProvider);
+            navigate('/')
         }catch(err){
             console.error(err);
         }
@@ -23,8 +25,11 @@ const Login = ({ setLoginPop }) => {
     const handleClose = () => {
       console.log("Closing modal...");
       setLoginPop(false);
-      history.push('/');// Close the modal when X is clicked
+      navigate('/');// Close the modal when X is clicked
   };
+  const handleSignup = () => {
+    navigate('/signup'); // Navigate to the signup page
+};
 
     
   return (
@@ -45,16 +50,16 @@ const Login = ({ setLoginPop }) => {
              <div className="mt-2">
                <img src={guitar} className="w-20 h-20 ml-32"  alt="guitar" />
                <p className="text-base font-medium mt-5 text-center">Help us to become one of the safest places<br/> to buy and sell</p>
-               <div className="flex border-2 border-black p-2 rounded-md mt-12 cursor-pointer">
+               <div onClick={handleSignup} className="flex border-2 border-black p-2 rounded-md mt-12 cursor-pointer">
                    <img src={phone} className="w-6 h-6"  alt="phone" />
-                   <h1 className="font-semibold ml-3">Continue with phone</h1>
+                   <h1 className="font-semibold ml-3">Signup</h1>
                </div>
                <div onClick={googleSignin} className="flex border border-gray-300 p-2 rounded-md mt-4 cursor-pointer">
                    <img src={google} className="w-6 h-6"  alt="google" />
                    <h1 className="font-semibold ml-12">Continue with Google</h1>
                </div>
                <h1 className="text-center mt-4 cursor-pointer">OR</h1>
-               <h1 className="text-center mt-4 underline cursor-pointer">Login with Email</h1>
+               <Link to="/signin" className="text-center mt-4 underline cursor-pointer">Login</Link>
                <h1 className="text-center mt-28 text-xs">All your personal details are safe with us.</h1>
                <h1 className="text-center mt-4 text-xs">If you continue, you are accepting <span className="text-blue-600">OLX Terms and <br/>Conditions and Privacy Policy</span></h1>
              </div>
