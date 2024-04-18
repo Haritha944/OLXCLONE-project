@@ -11,11 +11,13 @@ import { AuthContextProvider } from './store/Context';
 import Signin from './components/Signin';
 import Signup from './components/Signup';
 import Account from './components/Account';
+import View from './components/View';
+
 
 
 
 function App() {
-  
+
   return (
     
     <>
@@ -28,6 +30,7 @@ function App() {
       <Route path='/signup' element={<Signup />}/>
       <Route path='/account' element={<Account />}/>
       <Route path='/details' element={<Details/>}/>
+      <Route path='/view' element={<View/>}/>
       <Route path='/create' element={<Create/>}/>
 
     </Route>

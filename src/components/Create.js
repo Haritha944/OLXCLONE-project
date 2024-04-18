@@ -1,22 +1,45 @@
 import React,{useContext, useState ,useRef,useEffect} from 'react'
 import Navbar from './Navbar';
-import {UserAuth, FirebaseContext } from "../store/Context";
+import {AuthContext, FirebaseContext } from "../store/Authcontext";
+import {storage } from "../firebase/setup";
 import { useNavigate } from "react-router-dom";
-import Swal from 'sweetalert2'
+import Swal from 'sweetalert2';
 
 const Create = () => {
   const {firebase} = useContext(FirebaseContext);
-  const {user} = useContext(UserAuth);
+  const inputRef=useRef();
+  const navigate = useNavigate();
+  const {user} = useContext(AuthContext);
   const [name, setName] = useState("");
   const [category, setCategory] = useState("");
   const [price, setPrice] = useState("");
   const [image, setImage] = useState(null);
-  const handleSubmit=()=>{
-             firebase.storage().ref(`/image/${image.name}`).put(image).then(({ref}) => {
+  const date = new Date()
+  useEffect(()=>{
+    inputRef.current.focus();
+  },[])
+  const handleSubmit= () =>{
+             storage().ref(`/image/${image.name}`).put(image).then(({ref}) => {
               ref.getDownloadURL().then((url)=>{
                 console.log(url);
+                firebase.firestore().collection('products').add({
+                  name,
+                  category,
+                  price,
+                  url,
+                  userId:user.uid,
+                  createdAt:date.toDateString()
+                })
+                navigate('/')
               })
              })
+             .then(() => {
+              console.log("Product added successfully.");
+              navigate('/');
+            })
+            .catch((error) => {
+              console.error("Error adding product:", error);
+            });
             };
   return (
     <div>
@@ -26,7 +49,7 @@ const Create = () => {
         <label htmlFor="fname">Name</label>
         <br />
         <input className='input p-2 my-2 bg-white-500 border border-gray-500 rounded' 
-          placeholder='Name' type="text" value={name} onChange={(e) => setName(e.target.value)} id="fname" name="Name" 
+          placeholder='Name' type="text" ref={inputRef} value={name} onChange={(e) => setName(e.target.value)} id="fname" name="Name" 
         defaultValue="John"/>
         <br />
         <label htmlFor='fname'>Category</label>
